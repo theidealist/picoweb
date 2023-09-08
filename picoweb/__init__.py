@@ -210,7 +210,7 @@ class WebApp:
             #print(req, "After response write")
         except Exception as e:
             if self.debug >= 0:
-                self.log.exception(e, "%.3f %s %s %r" % (utime.time(), req, writer, e))
+                self.log.exception(e)
             yield from self.handle_exc(req, writer, e)
 
         if close is not False:
