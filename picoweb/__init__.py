@@ -295,7 +295,7 @@ class WebApp:
         This is good place to connect to/initialize a database, for example."""
         self.inited = True
 
-    def serve(self, loop, host, port):
+    def serve(self, host, port):
         # Actually serve client connections. Subclasses may override this
         # to e.g. catch and handle exceptions when dealing with server socket
         # (which are otherwise unhandled and will terminate a Picoweb app).
@@ -317,5 +317,5 @@ class WebApp:
                 app.init()
         if debug > 0:
             print("* Running on http://%s:%s/" % (host, port))
-        return self.serve(loop, host, port)
+        return self.serve(host, port)
             
