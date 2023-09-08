@@ -210,7 +210,7 @@ class WebApp:
             #print(req, "After response write")
         except Exception as e:
             if self.debug >= 0:
-                self.log.exc(e, "%.3f %s %s %r" % (utime.time(), req, writer, e))
+                self.log.exception(e, "%.3f %s %s %r" % (utime.time(), req, writer, e))
             yield from self.handle_exc(req, writer, e)
 
         if close is not False:
@@ -300,9 +300,9 @@ class WebApp:
         # to e.g. catch and handle exceptions when dealing with server socket
         # (which are otherwise unhandled and will terminate a Picoweb app).
         # Note: name and signature of this method may change.
-        loop.create_task(asyncio.start_server(self._handle, host, port))
+        return asyncio.create_task(asyncio.start_server(self._handle, host, port))
 
-    def run(self, host="127.0.0.1", port=8081, debug=False, lazy_init=False, log=None, run_forever=True):
+    def run(self, host="127.0.0.1", port=8081, debug=False, lazy_init=False, log=None):
         if log is None and debug >= 0:
             import logging
             log = logging.getLogger("picoweb")
@@ -315,11 +315,7 @@ class WebApp:
         if not lazy_init:
             for app in self.mounts:
                 app.init()
-        loop = asyncio.get_event_loop()
         if debug > 0:
             print("* Running on http://%s:%s/" % (host, port))
-        self.serve(loop, host, port)
-        if run_forever:
-            loop.run_forever()
-            loop.close()
+        return self.serve(loop, host, port)
             
